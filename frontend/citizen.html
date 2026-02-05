@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Dashboard - Green Coin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-brand">🌱 Green Coin</div>
+            <div class="navbar-user">
+                <div class="coin-badge" id="coinBalance">0 Coins</div>
+                <span id="userName">User</span>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <div class="dashboard-grid">
+                <!-- Sidebar: Submit Report Form -->
+                <div class="card">
+                    <h2 class="card-title">📸 Report Waste</h2>
+                    <form id="reportForm">
+                        <div class="form-group">
+                            <label for="wasteImage">Photo</label>
+                            <input type="file" id="wasteImage" accept="image/*" capture="environment" required>
+                            <div id="imagePreview" style="margin-top: 10px; display: none;">
+                                <img id="previewImg" style="max-width: 100%; border-radius: 8px;" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" rows="4"
+                                placeholder="Describe the waste type and location details..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Location</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="text" id="locationDisplay" readonly placeholder="Getting location..."
+                                    style="flex: 1;">
+                                <button type="button" class="btn btn-secondary" onclick="refreshLocation()">📍</button>
+                            </div>
+                            <input type="hidden" id="latitude">
+                            <input type="hidden" id="longitude">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Report</button>
+                    </form>
+
+                    <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+
+                    <!-- Transaction History -->
+                    <h3 class="card-title">💰 Recent Transactions</h3>
+                    <div id="transactionList">
+                        <p style="color: var(--text-light); text-align: center;">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Main Content: Map with Reports -->
+                <div>
+                    <div class="card">
+                        <h2 class="card-title">🗺️ My Reports</h2>
+                        <div class="map-container">
+                            <div id="map"></div>
+                            <div class="map-legend">
+                                <div class="legend-item">
+                                    <div class="legend-icon" style="background: #2196F3;"></div>
+                                    <span>Open</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-icon" style="background: #FF9800;"></div>
+                                    <span>Picking</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-icon" style="background: #4CAF50;"></div>
+                                    <span>Collected</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports Table -->
+                    <div class="card" style="margin-top: 1.5rem;">
+                        <h3 class="card-title">📋 Report History</h3>
+                        <div id="reportsTable">
+                            <p style="color: var(--text-light); text-align: center;">Loading reports...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+    <!-- Leaflet Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- SockJS & STOMP for WebSocket -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="js/citizen.js"></script>
+</body>
+
+</html>

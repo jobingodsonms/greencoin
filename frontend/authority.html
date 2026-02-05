@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authority Dashboard - Green Coin</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-brand">🌱 Green Coin - Authority</div>
+            <div class="navbar-user">
+                <span id="userName">Authority</span>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Stats Cards -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="card">
+                    <h3 style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">Total Reports</h3>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="totalReports">0
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">Open Reports</h3>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--secondary-color);" id="openReports">0
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">Collected</h3>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="collectedReports">0
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">Coins Awarded</h3>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--warning-color);" id="totalCoins">0</div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="card">
+                <h2 class="card-title">🛠️ Management Tools</h2>
+                <p style="color: var(--text-light); text-align: center; padding: 3rem;">
+                    Authority dashboard for system management. <br>
+                    Features: Full reports view, user management, coin deductions, and marketplace management.<br>
+                    <br>
+                    <em>This is a placeholder. Full authority features can be implemented as needed.</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        // Simple authority dashboard
+        async function init() {
+            const idToken = localStorage.getItem('idToken');
+            if (!idToken) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            if (!userProfile || userProfile.role !== 'AUTHORITY') {
+                alert('Access denied. Authority only.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = userProfile.displayName || userProfile.email;
+
+            // Placeholder stats
+            document.getElementById('totalReports').textContent = '-';
+            document.getElementById('openReports').textContent = '-';
+            document.getElementById('collectedReports').textContent = '-';
+            document.getElementById('totalCoins').textContent = '-';
+        }
+
+        function logout() {
+            firebase.auth().signOut();
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

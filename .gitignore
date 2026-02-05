@@ -1,0 +1,32 @@
+# Maven
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Build artifacts
+*.class
+*.jar
+*.war
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+backend/src/main/resources/application-local.properties
+backend/src/main/resources/serviceAccountKey.json
+
+# Frontend specific (if any)
+node_modules/
+dist/
+.vercel/

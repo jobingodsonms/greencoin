@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collector Dashboard - Green Coin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-brand">🌱 Green Coin - Collector</div>
+            <div class="navbar-user">
+                <span id="userName">Collector</span>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <div class="dashboard-grid" style="grid-template-columns: 1fr;">
+                <!-- Map with Available Reports -->
+                <div class="card">
+                    <h2 class="card-title">🗺️ Available Pickups</h2>
+                    <div style="margin-bottom: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="loadAvailableReports()">🔄 Refresh</button>
+                        <button class="btn btn-secondary" onclick="useMyLocation()">📍 Near Me</button>
+                    </div>
+
+                    <div class="map-container">
+                        <div id="map"></div>
+                        <div class="map-legend">
+                            <h4 style="margin-bottom: 0.5rem;">Status</h4>
+                            <div class="legend-item">
+                                <div class="legend-icon" style="background: #2196F3;"></div>
+                                <span>Available</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-icon" style="background: #FF9800;"></div>
+                                <span>My Pickups</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Active Pickups -->
+                <div class="card">
+                    <h3 class="card-title">🚚 My Active Pickups</h3>
+                    <div id="pickupsTable">
+                        <p style="color: var(--text-light); text-align: center;">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Details Modal -->
+    <div id="reportModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <h3 id="modalTitle"></h3>
+            <div id="modalContent"></div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button id="actionBtn" class="btn btn-primary" style="flex: 1;"></button>
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <!-- Leaflet Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- SockJS & STOMP -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="js/collector.js"></script>
+</body>
+
+</html>

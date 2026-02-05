@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "greencoin-bc425",
+  "private_key_id": "fb0b2747b7daa6023215a08fd6617e7e452db751",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDRXmW+KHtx3oad\nSrv5HTWrnY9ojzxDBD7QYSo0uvUekeiizRLM146x3FXK4vfIlDJ32ds83VlPqh3e\n0MfMN7p3P1j2tqVqFiWNSCltbpkVH/yFoV0/ukIRg2odNNsCpxM7wrTaTpd+MkhF\n2Ct6RNRDn669eVcjSKtFeGoiXrJyYCga4RCc+woRYJdQ9YJMjXyyOACR3x/9h0nY\nbWe4fT1t84W/7uTLxFkff/xefbXLyXGDQH2Bct8ob8b2NcKXboSaAiAKr2gcw9iy\njoHmXhcbInjYuFRQeVj0xhlRd45vBuPUeyHZdyBe39G4fSq7LQFs6MQPug51Pzgf\nDd/YpPcdAgMBAAECggEABt3vPVjrj5UKWj9Ywfdsyresu/OyuMn7W29MaJVXM8z6\nUdijDLfnNLsyzyg5k0kVDKxHDgx+gOfl+ehkHTUYtw+LVfAwpbWbPrKGtVGi0LgP\nWryrp8runs9uHA4fPsuHDHc64kwgmOGCUFQiPOzj/2HN4+YGbyBTicBEzuLHPIwO\no/7eex18ctG+VDVWj5xI1S8CPuGnWrr3No30pSF1jVFYmH+ZLqVKPtjdyFIi+Qyj\nDC8ItimEURhdUZVTL/g/hDHqHnBLQ+1pOGcSSh1HqyzQaozvOzwW+K59ksneJ8OK\nNKHmt32H4107JzwtT4DVKwD9pBzAFbcxB4bpFuDysQKBgQDsh13aKxL63TzQDFCI\nv8VJAYCBHV/GVomY83CPxa6Q1emoUURsHh1UcBDwrXpr4vKmU66GMs/2HJmZ4jlU\nNhSYyfTMH9/yGjRSsfhheIpQMzrpqd6jY4XHK4boHWlSOihQHsZ75lMWEvvTfXWS\ny076VRN/XDtYKULWNmDbVHoCaQKBgQDimqhBOaMI6ihJVAwzQj7UaocX2nT17AeF\n9RrzkZyDLK8uvB2d/H+M6pylAdSCCrWNz/wYJ5rQcHPP1LprP6eDybBGegkUcVwd\nhDbEKngoRf5bCNEF4aiStOK+ALtKXQqljcuXq8WcQ00ncT090Xr6T0EIyGjVkF/b\n9TAwjEMQlQKBgQC6lSYR3fzA7Bj2vWAiH7UPHCI0t+k/WjB8+TyIDZbhJf2GC2WA\nLFlSrHyQfyidRo/HaSe5MQgfyvvYCj7TET46MMXs6BAOuWEhAsc+jIn/LgqBHMFF\n/lIfhVSMcfcNKFd4rG5CerR8K0l/0e4XeE2657XTt/wQVawlswvAuOjuUQKBgAab\nieJ1AssEwO36dGyeNuTMwmmwpg5xtnpyfjmx+kVc7TLIq3hq33FFehHZrs+n7klX\nUjuGFB6V2NqrklAESCcwn2I+trsQ3yXBMDOiJWTPPa574FRykw7MFXyC2vM9KU1Q\niCpBCP8Ye0x2IdoGnLZlzzipV10624C3cpNH08DNAoGBALW56pWmdBuhPLX8Tnqw\nREJ3Va9qoz6ggYsAPc3ev+fif5uBYHqy3fGzMiEb077tv3/Z/i/uqFjYeSPsb5Na\nCaoCIAoz30gn4CPtH5PsAoLAyEX+pY4im0UdhhgJb+FMI449FqnInDGZ4q4Op3fP\nQb8JQld9YpPgmq99yU8+8fXP\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@greencoin-bc425.iam.gserviceaccount.com",
+  "client_id": "104485215429341604462",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40greencoin-bc425.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
