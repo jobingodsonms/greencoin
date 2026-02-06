@@ -28,6 +28,16 @@ server:
   error:
     include-message: always
 
+# Management Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
 # CORS Configuration
 cors:
   allowed-origins: ${ALLOWED_ORIGINS:https://greencoin-chi.vercel.app,http://localhost:3000}
