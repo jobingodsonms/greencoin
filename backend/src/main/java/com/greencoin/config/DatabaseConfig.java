@@ -2,6 +2,7 @@ package com.greencoin.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import javax.sql.DataSource;
 import java.net.URI;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 public class DatabaseConfig {
 
+    @Primary
     @Bean
     public DataSource dataSource() {
         String databaseUrl = System.getenv("DATABASE_URL");
