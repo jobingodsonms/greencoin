@@ -30,4 +30,4 @@ server:
 
 # CORS Configuration
 cors:
-  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000}
+  allowed-origins: ${ALLOWED_ORIGINS:https://greencoin-chi.vercel.app,http://localhost:3000}
