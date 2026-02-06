@@ -16,10 +16,10 @@ const firebaseConfig = {
 };
 
 // Backend API URL
-const API_BASE_URL = "http://localhost:8080";  // Change to production URL for Vercel
+const API_BASE_URL = "https://greencoin-production.up.railway.app";
 
 // WebSocket URL
-const WS_URL = "http://localhost:8080/ws";
+const WS_URL = "https://greencoin-production.up.railway.app/ws";
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

@@ -8,14 +8,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 
 @Slf4j
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.credentials-path}")
+    @Value("${firebase.credentials-path:firebase-admin-key.json}")
     private String credentialsPath;
 
     @Value("${firebase.project-id}")
@@ -25,7 +28,19 @@ public class FirebaseConfig {
     public void initialize() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
-                FileInputStream serviceAccount = new FileInputStream(credentialsPath);
+                InputStream serviceAccount;
+
+                // Try Base64 string first (ideal for Railway/production)
+                String base64Key = System.getenv("FIREBASE_KEY_BASE64");
+                if (base64Key != null && !base64Key.isBlank()) {
+                    log.info("Initializing Firebase using Base64 environment variable");
+                    byte[] decodedKey = Base64.getDecoder().decode(base64Key.trim());
+                    serviceAccount = new ByteArrayInputStream(decodedKey);
+                } else {
+                    // Fallback to file path
+                    log.info("Initializing Firebase using file: {}", credentialsPath);
+                    serviceAccount = new FileInputStream(credentialsPath);
+                }
 
                 FirebaseOptions options = FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -37,7 +52,8 @@ public class FirebaseConfig {
             }
         } catch (IOException e) {
             log.error("Error initializing Firebase Admin SDK: {}", e.getMessage());
-            // In development, we might not want to crash if Firebase is missing
+        } catch (IllegalArgumentException e) {
+            log.error("Error decoding FIREBASE_KEY_BASE64: {}", e.getMessage());
         }
     }
 }
