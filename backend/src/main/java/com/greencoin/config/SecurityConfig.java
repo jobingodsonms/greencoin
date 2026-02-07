@@ -16,9 +16,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import lombok.RequiredArgsConstructor;
+
+// ... other imports ...
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final FirebaseTokenFilter firebaseTokenFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,13 +36,26 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll() // Allow all for initial deployment testing
                 )
-                .addFilterBefore(new FirebaseTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(firebaseTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    /**
+     * Disable automatic registration of the FirebaseTokenFilter as a servlet
+     * filter.
+     * We want it to only run within the Spring Security filter chain.
+     */
+    @Bean
+    public FilterRegistrationBean<FirebaseTokenFilter> firebaseTokenFilterRegistration(FirebaseTokenFilter filter) {
+        FilterRegistrationBean<FirebaseTokenFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        // ...
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*")); // In production, limit this to Vercel URL
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));

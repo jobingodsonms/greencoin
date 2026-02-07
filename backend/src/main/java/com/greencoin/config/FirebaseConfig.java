@@ -5,9 +5,9 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,8 +24,8 @@ public class FirebaseConfig {
     @Value("${firebase.project-id}")
     private String projectId;
 
-    @PostConstruct
-    public void initialize() {
+    @Bean
+    public FirebaseApp firebaseApp() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
                 InputStream serviceAccount;
@@ -47,13 +47,18 @@ public class FirebaseConfig {
                         .setProjectId(projectId)
                         .build();
 
-                FirebaseApp.initializeApp(options);
+                FirebaseApp app = FirebaseApp.initializeApp(options);
                 log.info("Firebase Admin SDK initialized successfully");
+                return app;
+            } else {
+                return FirebaseApp.getInstance();
             }
         } catch (IOException e) {
             log.error("Error initializing Firebase Admin SDK: {}", e.getMessage());
+            throw new RuntimeException("Failed to initialize Firebase", e);
         } catch (IllegalArgumentException e) {
             log.error("Error decoding FIREBASE_KEY_BASE64: {}", e.getMessage());
+            throw new RuntimeException("Failed to decode Firebase key", e);
         }
     }
 }

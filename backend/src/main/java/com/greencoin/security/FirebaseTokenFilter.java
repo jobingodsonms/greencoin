@@ -9,12 +9,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 @Slf4j
+@Component
 public class FirebaseTokenFilter extends OncePerRequestFilter {
 
     @Override
@@ -28,6 +30,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         if (header != null && header.toLowerCase().startsWith("bearer ")) {
             String idToken = header.substring(7).trim();
             try {
+                // This call requires FirebaseApp to be initialized
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
                 String uid = decodedToken.getUid();
                 String email = decodedToken.getEmail();
@@ -36,13 +39,13 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
                     email = (String) decodedToken.getClaims().get("email");
                 }
 
-                log.info("Authenticated Firebase user: {}", email);
+                log.info("Successfully authenticated Firebase user: {}", email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         uid, email, new ArrayList<>());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
-                log.error("Firebase token verification failed: {}", e.getMessage());
+                log.error("Firebase token verification failed. Error: {}", e.getMessage());
                 SecurityContextHolder.clearContext();
             }
         } else if (header != null) {
