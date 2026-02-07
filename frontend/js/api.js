@@ -54,19 +54,24 @@ class APIClient {
             }
 
             if (!response.ok) {
-                let errorMessage = 'API request failed';
+                let errorMessage = `API Error ${response.status}`;
                 try {
                     const error = await response.json();
                     errorMessage = error.message || errorMessage;
                 } catch (e) {
-                    // Fallback to text if JSON parsing fails
                     try {
                         const text = await response.text();
-                        errorMessage = text || errorMessage;
+                        if (text && text.length < 100) errorMessage = text;
                     } catch (e2) { }
                 }
 
-                console.error(`[API] Error (${response.status}): ${errorMessage}`);
+                console.error(`[API] FAILED (${response.status}): ${errorMessage}`);
+
+                // If 403, specifically mention synchronization/auth issue
+                if (response.status === 403) {
+                    errorMessage = "Access Denied (403). Your session may have expired or backend configuration changed. Please try logging out and back in.";
+                }
+
                 throw new Error(errorMessage);
             }
 
