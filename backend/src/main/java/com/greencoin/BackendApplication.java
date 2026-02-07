@@ -3,7 +3,7 @@ package com.greencoin;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = { org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration.class })
 public class BackendApplication {
     public static void main(String[] args) {
         String databaseUrl = System.getenv("DATABASE_URL");
