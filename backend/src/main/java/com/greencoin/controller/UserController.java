@@ -52,12 +52,14 @@ public class UserController {
             @RequestParam(required = false) String displayName) {
 
         if (authentication == null) {
-            log.error("Registration failed: Authentication is null. Token verification likely failed.");
+            log.error("Registration failed: Authentication is null for request to /register");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse("Authentication failed. Please sign in again."));
+                    .body(new ErrorResponse("Authentication failed. No valid token found in request."));
         }
 
         try {
+            log.info("Registering/Syncing user. Principal: {}, Authenticated: {}",
+                    authentication.getName(), authentication.isAuthenticated());
             String firebaseUid = authentication.getName();
             String email = (String) authentication.getCredentials();
 

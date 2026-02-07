@@ -22,6 +22,8 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
+        log.info("Incoming request to: {} | Authorization header present: {}",
+                request.getRequestURI(), (header != null));
 
         if (header != null && header.toLowerCase().startsWith("bearer ")) {
             String idToken = header.substring(7).trim();
