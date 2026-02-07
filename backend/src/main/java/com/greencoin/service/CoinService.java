@@ -5,18 +5,21 @@ import com.greencoin.model.User;
 import com.greencoin.repository.CoinTransactionRepository;
 import com.greencoin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CoinService {
 
     private final CoinTransactionRepository transactionRepository;
     private final UserRepository userRepository;
+    private final WebSocketService webSocketService; // Assuming WebSocketService is needed for notifications
 
     @Transactional
     public void awardCoins(User user, Integer amount, Long reportId) {
@@ -32,6 +35,9 @@ public class CoinService {
                 .createdAt(LocalDateTime.now())
                 .build();
         transactionRepository.save(tx);
+
+        // Notify user via WebSocket
+        webSocketService.notifyCoinUpdate(user, amount, user.getCoinBalance());
     }
 
     @Transactional
@@ -52,6 +58,9 @@ public class CoinService {
                 .createdAt(LocalDateTime.now())
                 .build();
         transactionRepository.save(tx);
+
+        // Notify user via WebSocket
+        webSocketService.notifyCoinUpdate(user, -amount, user.getCoinBalance());
     }
 
     public List<CoinTransaction> getTransactionHistory(Long userId) {

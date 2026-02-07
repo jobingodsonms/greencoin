@@ -135,11 +135,11 @@ class APIClient {
 
     // Transaction APIs
     async getTransactions() {
-        return this.call('/api/user/transactions');
+        return this.call('/api/coins/transactions');
     }
 
     async getCoinBalance() {
-        return this.call('/api/user/profile');
+        return this.call('/api/coins/balance');
     }
 }
 
