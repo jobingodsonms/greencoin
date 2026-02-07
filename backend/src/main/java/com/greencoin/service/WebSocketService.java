@@ -12,14 +12,14 @@ public class WebSocketService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public void notifyNewReport(WasteReport report) {
-        messagingTemplate.convertAndSend("/topic/reports", createLightweightReportMap(report));
+        messagingTemplate.convertAndSend("/topic/reports/new", createLightweightReportMap(report));
     }
 
     public void notifyStatusChange(WasteReport report) {
         Object payload = createLightweightReportMap(report);
-        messagingTemplate.convertAndSend("/topic/report-status/" + report.getId(), payload);
-        // Also notify general topic for dashboard updates
-        messagingTemplate.convertAndSend("/topic/reports", payload);
+        messagingTemplate.convertAndSend("/topic/reports/" + report.getId() + "/status", payload);
+        // Also notify general topic for dashboard updates (sync with "new" if needed)
+        messagingTemplate.convertAndSend("/topic/reports/new", payload);
     }
 
     private java.util.Map<String, Object> createLightweightReportMap(WasteReport report) {
