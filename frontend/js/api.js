@@ -12,8 +12,9 @@ class APIClient {
 
     // Get auth headers
     getHeaders() {
+        const idToken = localStorage.getItem('idToken');
         return {
-            'Authorization': `Bearer ${this.idToken}`,
+            'Authorization': `Bearer ${idToken}`,
             'Content-Type': 'application/json'
         };
     }
