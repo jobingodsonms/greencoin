@@ -36,16 +36,30 @@ async function init() {
     refreshLocation();
 
     // Load data
-    await loadCoinBalance();
-    await loadTransactions();
-    await loadMyReports();
+    try {
+        console.log('Loading dashboard data...');
+        await Promise.all([
+            loadCoinBalance(),
+            loadTransactions(),
+            loadMyReports()
+        ]);
+        console.log('Dashboard data loaded successfully');
+    } catch (error) {
+        console.error('Initial data load error:', error);
+        // Don't alert here as individual loaders might have alerts, 
+        // but ensure we don't just hang.
+    }
 
     // Setup WebSocket
-    wsClient.connect();
-    wsClient.onCoinUpdate(handleCoinUpdate);
+    try {
+        wsClient.connect();
+        wsClient.onCoinUpdate(handleCoinUpdate);
+    } catch (e) {
+        console.error('WebSocket connection failed:', e);
+    }
 
     // Setup image preview
-    document.getElementById('wasteImage').addEventListener('change', handleImagePreview);
+    document.getElementById('wasteImage')?.addEventListener('change', handleImagePreview);
 }
 
 // Initialize Leaflet map
@@ -241,6 +255,7 @@ async function loadCoinBalance() {
         localStorage.setItem('userProfile', JSON.stringify(userProfile));
     } catch (error) {
         console.error('Failed to load coin balance:', error);
+        document.getElementById('coinBalance').textContent = 'Error';
     }
 }
 
@@ -268,6 +283,8 @@ async function loadTransactions() {
         `).join('');
     } catch (error) {
         console.error('Failed to load transactions:', error);
+        document.getElementById('transactionList').innerHTML =
+            `<p style="color: var(--danger-color); text-align: center;">Failed to load history: ${error.message}</p>`;
     }
 }
 
@@ -332,6 +349,8 @@ async function loadMyReports() {
 
     } catch (error) {
         console.error('Failed to load reports:', error);
+        document.getElementById('reportsTable').innerHTML =
+            `<p style="color: var(--danger-color); text-align: center;">Failed to load reports: ${error.message}</p>`;
     }
 }
 

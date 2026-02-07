@@ -29,26 +29,52 @@ class APIClient {
 
     // Generic API call
     async call(endpoint, options = {}) {
+        const url = `${this.baseURL}${endpoint}`;
+        console.log(`[API] Request: ${options.method || 'GET'} ${url}`);
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
         try {
-            const response = await fetch(`${this.baseURL}${endpoint}`, {
+            const response = await fetch(url, {
                 ...options,
-                headers: this.getHeaders()
+                headers: this.getHeaders(),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
+
+            console.log(`[API] Response: ${response.status} ${url}`);
 
             if (response.status === 401) {
+                console.warn('[API] 401 Unauthorized. Attempting to refresh token...');
                 await this.refreshToken();
                 // Retry request
                 return this.call(endpoint, options);
             }
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'API request failed');
+                let errorMessage = 'API request failed';
+                try {
+                    const error = await response.json();
+                    errorMessage = error.message || errorMessage;
+                } catch (e) {
+                    // Fallback to text if JSON parsing fails
+                    const text = await response.text();
+                    errorMessage = text || errorMessage;
+                }
+
+                console.error(`[API] Error (${response.status}): ${errorMessage}`);
+                throw new Error(errorMessage);
             }
 
             return await response.json();
         } catch (error) {
-            console.error('API Error:', error);
+            clearTimeout(timeoutId);
+            if (error.name === 'AbortError') {
+                console.error(`[API] Timeout: ${url}`);
+                throw new Error('Request timed out after 30 seconds');
+            }
+            console.error('[API] Network Error:', error);
             throw error;
         }
     }
