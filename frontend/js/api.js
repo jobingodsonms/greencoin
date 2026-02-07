@@ -28,9 +28,9 @@ class APIClient {
     }
 
     // Generic API call
-    async call(endpoint, options = {}) {
+    async call(endpoint, options = {}, retryCount = 0) {
         const url = `${this.baseURL}${endpoint}`;
-        console.log(`[API] Request: ${options.method || 'GET'} ${url}`);
+        console.log(`[API] Request: ${options.method || 'GET'} ${url} (Retry: ${retryCount})`);
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
@@ -45,11 +45,11 @@ class APIClient {
 
             console.log(`[API] Response: ${response.status} ${url}`);
 
-            if (response.status === 401) {
+            if (response.status === 401 && retryCount < 1) {
                 console.warn('[API] 401 Unauthorized. Attempting to refresh token...');
                 await this.refreshToken();
-                // Retry request
-                return this.call(endpoint, options);
+                // Retry request once
+                return this.call(endpoint, options, retryCount + 1);
             }
 
             if (!response.ok) {
@@ -59,8 +59,10 @@ class APIClient {
                     errorMessage = error.message || errorMessage;
                 } catch (e) {
                     // Fallback to text if JSON parsing fails
-                    const text = await response.text();
-                    errorMessage = text || errorMessage;
+                    try {
+                        const text = await response.text();
+                        errorMessage = text || errorMessage;
+                    } catch (e2) { }
                 }
 
                 console.error(`[API] Error (${response.status}): ${errorMessage}`);
@@ -72,7 +74,7 @@ class APIClient {
             clearTimeout(timeoutId);
             if (error.name === 'AbortError') {
                 console.error(`[API] Timeout: ${url}`);
-                throw new Error('Request timed out after 30 seconds');
+                throw new Error('Request timed out after 30 seconds. The server might be busy or down.');
             }
             console.error('[API] Network Error:', error);
             throw error;
