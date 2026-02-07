@@ -270,6 +270,8 @@ async function showReportDetailsById(reportId) {
 
 // Handle new report notification
 function handleNewReport(data) {
+    console.log('🔔 REAL-TIME: New report received via WebSocket!', data);
+
     // Show notification
     if (Notification.permission === 'granted') {
         new Notification('New Waste Report', {
@@ -278,7 +280,8 @@ function handleNewReport(data) {
         });
     }
 
-    // Reload reports
+    // Refresh the map and records
+    console.log('Refreshing dashboard data...');
     loadAvailableReports();
 }
 
