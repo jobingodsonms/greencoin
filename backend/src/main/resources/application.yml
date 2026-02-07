@@ -3,9 +3,7 @@ spring:
     name: greencoin-backend
   
   datasource:
-    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:greencoin}
-    username: ${PGUSER:postgres}
-    password: ${PGPASSWORD:postgres}
+    # URL and credentials are set in BackendApplication.java to handle Railway's format
     driver-class-name: org.postgresql.Driver
 
   jpa:
