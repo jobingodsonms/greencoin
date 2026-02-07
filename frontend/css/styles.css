@@ -23,8 +23,8 @@
     --bg-light: #F5F5F5;
     --bg-white: #FFFFFF;
     --border-color: #E0E0E0;
-    --shadow: 0 2px 8px rgba(0,0,0,0.1);
-    --shadow-lg: 0 4px 16px rgba(0,0,0,0.15);
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 body {
@@ -315,8 +315,13 @@ footer {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* ================================
@@ -450,6 +455,34 @@ footer {
 .status-collected {
     background: #E8F5E9;
     color: var(--primary-color);
+}
+
+/* Action Badges (Buttons that look like Status Badges) */
+.status-action {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: #E8F5E9;
+    /* Light green like 'collected' */
+    color: var(--primary-color);
+    transition: all 0.2s ease;
+    text-align: center;
+    line-height: 1;
+}
+
+.status-action:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-action:active {
+    transform: translateY(0);
 }
 
 /* ================================

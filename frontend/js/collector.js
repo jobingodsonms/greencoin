@@ -228,7 +228,7 @@ async function loadMyPickups() {
                             <td><span class="status-badge status-${p.status.toLowerCase()}">${p.status}</span></td>
                             <td>${new Date(p.reportedAt).toLocaleDateString()}</td>
                             <td>
-                                <button class="btn btn-primary" onclick="showReportDetailsById(${p.id})" style="padding: 6px 12px; font-size: 0.875rem;">
+                                <button class="status-action" onclick="showReportDetailsById(${p.id})">
                                     ${p.status === 'PICKING' ? '✅ Complete' : 'View'}
                                 </button>
                             </td>
