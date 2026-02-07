@@ -38,7 +38,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*")); // In production, limit this to Vercel URL
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setAllowedHeaders(
+                Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With", "Origin", "x-auth-token"));
         configuration.setExposedHeaders(List.of("x-auth-token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
