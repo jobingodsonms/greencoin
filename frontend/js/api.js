@@ -75,7 +75,8 @@ class APIClient {
                 throw new Error(errorMessage);
             }
 
-            return await response.json();
+            const content = await response.text();
+            return content ? JSON.parse(content) : null;
         } catch (error) {
             clearTimeout(timeoutId);
             if (error.name === 'AbortError') {
