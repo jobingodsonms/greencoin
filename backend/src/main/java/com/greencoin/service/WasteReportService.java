@@ -1,7 +1,6 @@
 package com.greencoin.service;
 
 import com.greencoin.dto.CreateReportRequest;
-import com.greencoin.dto.WasteReportResponse;
 import com.greencoin.model.User;
 import com.greencoin.model.WasteReport;
 import com.greencoin.repository.WasteReportRepository;
@@ -71,8 +70,10 @@ public class WasteReportService {
                 .orElseThrow(() -> new RuntimeException("Collector not found"));
 
         WasteReport report = getReportById(reportId);
+        log.info("Pickup attempt for report ID: {} | Current Status: {}", reportId, report.getStatus());
+
         if (report.getStatus() != WasteReport.ReportStatus.OPEN) {
-            throw new RuntimeException("Report is not available for picking");
+            throw new RuntimeException("Report is not available for picking. Current status: " + report.getStatus());
         }
 
         report.setStatus(WasteReport.ReportStatus.PICKING);
