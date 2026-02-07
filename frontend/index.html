@@ -1,64 +1,274 @@
 <!DOCTYPE html>
-<!-- Build trigger: 2026-02-06 21:40 -->
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Coin - Civic Waste Reporting</title>
+    <title>Green Coin - Revolutionary Waste Management & Reporting System</title>
+    <meta name="description"
+        content="Green Coin is a revolutionary waste management and reporting system that rewards citizens for environmental action. Report waste, earn rewards, and transform your community.">
+    <meta name="keywords"
+        content="waste management system, waste reporting system, digital waste management, waste collection software, smart waste management, waste tracking app, community waste reporting, municipal waste management, green coin, environmental rewards">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
     <div class="landing-container">
-        <div class="hero-section">
+        <!-- Hero Section -->
+        <header class="hero-section">
             <div class="hero-content">
-                <div class="logo-container" style="justify-content: center; margin-bottom: 1rem;">
+                <div class="logo-container" style="justify-content: center; margin-bottom: 2rem;">
                     <img src="assets/logo.svg" class="logo-img-large" alt="Green Coin Logo">
                 </div>
                 <h1>Green Coin</h1>
-                <p class="tagline">Report waste. Earn rewards. Make your city cleaner.</p>
+                <p class="tagline">Transform Your Community with Smart Waste Management Technology. Report waste, earn
+                    rewards, and make your city cleaner.</p>
                 <div class="cta-buttons">
                     <button onclick="location.href='login.html'" class="btn btn-primary">Get Started</button>
-                    <button onclick="location.href='#how-it-works'" class="btn btn-secondary">Learn More</button>
+                    <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})"
+                        class="btn btn-secondary">Learn More</button>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <section id="how-it-works" class="section">
-            <h2>How It Works</h2>
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="section-header">
+                <h2>Reimagining Waste Management</h2>
+                <p>Green Coin is an innovative <strong>waste management system</strong> that empowers citizens to
+                    actively participate in keeping their communities clean. We combine cutting-edge technology with
+                    gamification to create a sustainable ecosystem where environmental responsibility meets tangible
+                    incentives.</p>
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <h3>The Problem</h3>
+                    <p>Traditional waste management suffers from delayed responses, lack of citizen engagement, and
+                        inefficient resource allocation for collection teams.</p>
+                </div>
+                <div class="impact-item" style="border-left-color: #2196F3;">
+                    <h3>Our Solution</h3>
+                    <p>A comprehensive <strong>digital waste management platform</strong> that connects citizens
+                        directly with collectors through real-time mapping and rewards.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Role-Based Features -->
+        <section id="roles" class="section" style="background: #f8faf8;">
+            <div class="section-header">
+                <h2>Tailored for Every Stakeholder</h2>
+                <p>A collaborative ecosystem built for citizens, professional collectors, and municipal authorities.</p>
+            </div>
+
+            <div class="roles-grid">
+                <!-- Citizen Role -->
+                <article class="role-card citizen">
+                    <div class="role-header">
+                        <div class="feature-icon" style="margin-bottom: 0;">🤳</div>
+                        <h3>For Citizens</h3>
+                    </div>
+                    <div class="role-body">
+                        <h4>Report, Track, Earn</h4>
+                        <ul>
+                            <li><strong>Instant Reporting</strong>: Snap a photo and submit with GPS location</li>
+                            <li><strong>Automatic Tracking</strong>: Precise waste location mapping</li>
+                            <li><strong>Real-Time Updates</strong>: Track status from submission to collection</li>
+                            <li><strong>Earn Rewards</strong>: Digital currency for every validated report</li>
+                        </ul>
+                        <button onclick="location.href='login.html'" class="btn btn-primary"
+                            style="width: 100%; margin-top: 1rem;">Start Reporting</button>
+                    </div>
+                </article>
+
+                <!-- Collector Role -->
+                <article class="role-card collector">
+                    <div class="role-header">
+                        <div class="feature-icon" style="margin-bottom: 0;">🚛</div>
+                        <h3>For Collectors</h3>
+                    </div>
+                    <div class="role-body">
+                        <h4>Efficient Route Planning</h4>
+                        <ul>
+                            <li><strong>Live Waste Map</strong>: Real-time visualization of reports</li>
+                            <li><strong>Smart Coordination</strong>: Signal intent to avoid duplicate efforts</li>
+                            <li><strong>Workflow Management</strong>: Track OPEN → PICKING → COLLECTED</li>
+                            <li><strong>Performance Metrics</strong>: Track collection statistics and impact</li>
+                        </ul>
+                        <button onclick="location.href='login.html'" class="btn btn-primary"
+                            style="width: 100%; margin-top: 1rem; background: #2196F3;">Access Dashboard</button>
+                    </div>
+                </article>
+
+                <!-- Authority Role -->
+                <article class="role-card authority">
+                    <div class="role-header">
+                        <div class="feature-icon" style="margin-bottom: 0;">📊</div>
+                        <h3>For Authorities</h3>
+                    </div>
+                    <div class="role-body">
+                        <h4>Marketplace & Analytics</h4>
+                        <ul>
+                            <li><strong>Data-Driven Insights</strong>: Identify waste accumulation hotspots</li>
+                            <li><strong>Incentive Programs</strong>: Manage the Green Coin Marketplace</li>
+                            <li><strong>Engagement Tracking</strong>: Monitor community participation</li>
+                            <li><strong>Resource Optimization</strong>: Allocate resources based on real data</li>
+                        </ul>
+                        <button onclick="location.href='login.html'" class="btn btn-primary"
+                            style="width: 100%; margin-top: 1rem; background: #9C27B0;">View Analytics</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Key Features Section -->
+        <section id="features" class="section">
+            <div class="section-header">
+                <h2>Why Choose Green Coin?</h2>
+                <p>The most advanced <strong>mobile waste reporting system</strong> designed for speed, scale, and
+                    environmental impact.</p>
+            </div>
+
             <div class="feature-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">📸</div>
-                    <h3>1. Report Waste</h3>
-                    <p>Snap a photo of littered areas and submit with GPS location</p>
+                    <div class="feature-icon">🗺️</div>
+                    <h3>Interactive Mapping</h3>
+                    <p>Real-time location visualization using open mapping technology for precise tracking.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🚚</div>
-                    <h3>2. Collection</h3>
-                    <p>Verified collectors pick up the reported waste</p>
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile-First Design</h3>
+                    <p>Installable PWA that works offline with one-tap photo capture and sync.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">💰</div>
-                    <h3>3. Earn Coins</h3>
-                    <p>Get 50 Green Coins when your report is collected</p>
+                    <h3>Incentive Economy</h3>
+                    <p>Earn coins for every report and spend them in our eco-friendly marketplace.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🎁</div>
-                    <h3>4. Redeem Rewards</h3>
-                    <p>Use coins in our marketplace for exclusive items</p>
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Scalable</h3>
+                    <p>Enterprise-grade security with role-based access and Firestore protection.</p>
                 </div>
             </div>
         </section>
 
-        <section class="section cta-section">
-            <h2>Join the Movement</h2>
-            <p>Be part of the solution. Start earning rewards for making your city cleaner.</p>
-            <button onclick="location.href='login.html'" class="btn btn-large">Sign Up Now</button>
+        <!-- Use Cases Section -->
+        <section id="use-cases" class="section" style="background: #f0f4f0;">
+            <div class="section-header">
+                <h2>Versatile Applications</h2>
+                <p>From city-wide municipal programs to private property management.</p>
+            </div>
+
+            <div class="use-case-grid">
+                <div class="use-case-card">
+                    <h4>Municipalities</h4>
+                    <p>Implement a 24/7 citizen reporting channel that saves tax dollars through optimized routing.</p>
+                </div>
+                <div class="use-case-card">
+                    <h4>Property Managers</h4>
+                    <p>Maintain community standards and track common area issues via resident reporting.</p>
+                </div>
+                <div class="use-case-card">
+                    <h4>EO Groups</h4>
+                    <p>Engage volunteers and document environmental problems for data-driven advocacy.</p>
+                </div>
+                <div class="use-case-card">
+                    <h4>Schools</h4>
+                    <p>Teach sustainability through action and gamify campus cleanliness competitions.</p>
+                </div>
+            </div>
         </section>
 
-        <footer>
-            <p>&copy; 2026 Green Coin. Civic waste reporting made rewarding.</p>
+        <!-- Tech Stack Section -->
+        <section id="tech" class="section">
+            <div class="section-header">
+                <h2>Technology Stack: Built for Scale</h2>
+                <p>Green Coin uses industry-standard enterprise technology to ensure performance and reliability.</p>
+            </div>
+
+            <div class="tech-grid">
+                <div class="tech-badge"><span>⚛️</span> Next.js / React</div>
+                <div class="tech-badge"><span>🔥</span> Firebase / Firestore</div>
+                <div class="tech-badge"><span>📡</span> WebSockets</div>
+                <div class="tech-badge"><span>🗺️</span> OpenStreetMap</div>
+                <div class="tech-badge"><span>🔒</span> JWT Security</div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="section">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>What is a waste reporting system?</h3>
+                    <p>It allows citizens to report public waste issues (litter, overflowing bins) to authorities
+                        through a digital platform using photos and GPS.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do Green Coin rewards work?</h3>
+                    <p>You earn coins for every validated report. These coins can be redeemed in our marketplace for
+                        rewards from local businesses.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is it suitable for small communities?</h3>
+                    <p>Yes! Green Coin scales perfectly from small neighborhoods to large cities with zero
+                        infrastructure investment required.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Footer Section -->
+        <section class="section cta-section">
+            <div class="section-header" style="margin-bottom: 2rem;">
+                <h2 style="color: white;">Join the Waste Management Revolution</h2>
+                <p>Clean communities. Engaged citizens. Sustainable future.</p>
+            </div>
+            <button onclick="location.href='login.html'" class="btn btn-large">Get Started Now</button>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Green Coin</h4>
+                    <p>Civic waste reporting made rewarding. Empowering communities through technology.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#roles">Our Roles</a></li>
+                        <li><a href="login.html">Sign In</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Solutions</h4>
+                    <ul>
+                        <li><a href="#use-cases">Municipalities</a></li>
+                        <li><a href="#use-cases">Property Management</a></li>
+                        <li><a href="#use-cases">EO Organizations</a></li>
+                        <li><a href="#use-cases">Schools</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Green Coin. All rights reserved. | Transforming environmental action into tangible
+                    rewards.</p>
+            </div>
         </footer>
     </div>
 </body>
