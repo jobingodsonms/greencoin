@@ -136,97 +136,99 @@ function closeCamera() {
 
 function takeSnapshot() {
     const video = document.getElementById('video');
-    const canv/**
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob((blob) => {
+        capturedBlob = blob;
+        const url = URL.createObjectURL(blob);
+        document.getElementById('previewImg').src = url;
+        document.getElementById('imagePreview').style.display = 'block';
+        closeCamera();
+    }, 'image/jpeg', 0.8);
+}
+
+function clearImage() {
+    capturedBlob = null;
+    document.getElementById('previewImg').src = '';
+    document.getElementById('imagePreview').style.display = 'none';
+}
+
+/**
  * Convert File/Blob to Base64
  */
-    async function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
+async function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
+// Set up form submission
+document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const description = document.getElementById('description').value;
+    const latitude = document.getElementById('latitude').value;
+    const longitude = document.getElementById('longitude').value;
+
+    if (!capturedBlob) {
+        alert('Please capture or select a photo first');
+        return;
     }
 
-    // Set up form submission
-    document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    if (!latitude || !longitude) {
+        alert('Please enable location to submit report');
+        return;
+    }
 
-        const description = document.getElementById('description').value;
-        const latitude = document.getElementById('latitude').value;
-        const longitude = document.getElementById('longitude').value;
-
-        if (!capturedBlob) {
-            alert('Please capture or select a photo first');
-            return;
-        }
-
-        if (!latitude || !longitude) {
-            alert('Please enable location to submit report');
-            return;
-        }
-
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.textContent;
-
-        try {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-
-            console.log('Step 1: Converting image to Base64...');
-            const base64Image = await fileToBase64(capturedBlob);
-            console.log('Step 1 Complete: Base64 string created (length: ' + base64Image.length + ')');
-
-            console.log('Step 2: Submitting report to backend API...');
-            const report = await api.createReport({
-                latitude: parseFloat(latitude),
-                longitude: parseFloat(longitude),
-                imageUrl: base64Image, // Sending Base64 string directly
-                description: description
-            });
-            console.log('Step 2 Complete: Report created:', report);
-
-            // Success!
-            alert('✅ Report submitted successfully! You will earn 50 coins when collected.');
-
-            // Reset form
-            document.getElementById('reportForm').reset();
-            capturedBlob = null;
-            document.getElementById('imagePreview').style.display = 'none';
-
-            // Refresh UI
-            loadTransactions();
-            loadCoinBalance();
-            loadMyReports();
-
-        } catch (error) {
-            console.error('Submit error:', error);
-            alert('Failed to submit report: ' + error.message);
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalBtnText;
-        }
-    });
-
-    const storageRef = storage.ref();
-    const timestamp = Date.now();
-
-    // Fix: Blobs from camera don't have .name property
-    const name = file.name || `capture_${timestamp}.jpg`;
-    const imageRef = storageRef.child(`waste-reports/${timestamp}_${name}`);
-
-    console.log(`Starting upload to path: waste-reports/${timestamp}_${name}`);
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.textContent;
 
     try {
-        const uploadTask = await imageRef.put(file);
-        console.log('Upload successful:', uploadTask);
-        const downloadURL = await imageRef.getDownloadURL();
-        return downloadURL;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        console.log('Step 1: Converting image to Base64...');
+        const base64Image = await fileToBase64(capturedBlob);
+        console.log('Step 1 Complete: Base64 string created (length: ' + base64Image.length + ')');
+
+        console.log('Step 2: Submitting report to backend API...');
+        const report = await api.createReport({
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            imageUrl: base64Image, // Sending Base64 string directly
+            description: description
+        });
+        console.log('Step 2 Complete: Report created:', report);
+
+        // Success!
+        alert('✅ Report submitted successfully! You will earn 50 coins when collected.');
+
+        // Reset form
+        document.getElementById('reportForm').reset();
+        capturedBlob = null;
+        document.getElementById('imagePreview').style.display = 'none';
+
+        // Refresh UI
+        loadTransactions();
+        loadCoinBalance();
+        loadMyReports();
+
     } catch (error) {
-        console.error('Firebase Storage Error:', error);
-        throw new Error('Storage Upload Failed: ' + error.message);
+        console.error('Submit error:', error);
+        alert('Failed to submit report: ' + error.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
     }
-}
+});
 
 // Load coin balance
 async function loadCoinBalance() {
