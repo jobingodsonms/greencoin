@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+// Whitelist for authorized collectors
 public class CollectorWhitelist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

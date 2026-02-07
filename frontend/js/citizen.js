@@ -203,11 +203,11 @@ document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
     }
 
     const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.textContent;
+    const originalBtnText = submitBtn.innerHTML;
 
     try {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
 
         console.log('Step 1: Converting image to Base64...');
         const base64Image = await fileToBase64(capturedBlob);
@@ -240,7 +240,7 @@ document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
         alert('Failed to submit report: ' + error.message);
     } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
+        submitBtn.innerHTML = originalBtnText;
     }
 });
 
@@ -266,17 +266,20 @@ async function loadTransactions() {
         const container = document.getElementById('transactionList');
 
         if (transactions.length === 0) {
-            container.innerHTML = '<p style="color: var(--text-light); text-align: center;">No transactions yet</p>';
+            container.innerHTML = '<p style="color: var(--text-light); text-align: center; padding: 2rem; opacity: 0.5;">No transactions yet</p>';
             return;
         }
 
         container.innerHTML = transactions.slice(0, 5).map(tx => `
-            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
-                <div>
-                    <div style="font-weight: 600;">${tx.transactionType}</div>
-                    <div style="font-size: 0.875rem; color: var(--text-light);">${new Date(tx.createdAt).toLocaleDateString()}</div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: white; border-radius: 12px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div style="width: 40px; height: 40px; border-radius: 10px; background: ${tx.amount > 0 ? '#f0f7f0' : '#fff0f0'}; display: flex; align-items: center; justify-content: center; color: ${tx.amount > 0 ? 'var(--primary-color)' : 'var(--danger-color)'};">
+                    <i class="fas ${tx.amount > 0 ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
                 </div>
-                <div style="font-weight: 600; color: ${tx.amount > 0 ? 'var(--primary-color)' : 'var(--danger-color)'};">
+                <div style="flex: 1;">
+                    <div style="font-weight: 700; font-size: 0.9rem;">${tx.transactionType}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-light);">${new Date(tx.createdAt).toLocaleDateString()}</div>
+                </div>
+                <div style="font-weight: 800; color: ${tx.amount > 0 ? 'var(--primary-color)' : 'var(--danger-color)'};">
                     ${tx.amount > 0 ? '+' : ''}${tx.amount}
                 </div>
             </div>
@@ -284,7 +287,7 @@ async function loadTransactions() {
     } catch (error) {
         console.error('Failed to load transactions:', error);
         document.getElementById('transactionList').innerHTML =
-            `<p style="color: var(--danger-color); text-align: center;">Failed to load history: ${error.message}</p>`;
+            `<p style="color: var(--danger-color); text-align: center;">Failed to load history</p>`;
     }
 }
 

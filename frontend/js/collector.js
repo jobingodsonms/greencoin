@@ -202,51 +202,60 @@ async function markCollected(reportId) {
 async function loadMyPickups() {
     try {
         const pickups = await api.getMyPickups();
-        const container = document.getElementById('pickupsTable');
+        const container = document.getElementById('pickupsList');
+        const countEl = document.getElementById('activeCount');
+
+        if (countEl) countEl.textContent = pickups.length;
 
         if (pickups.length === 0) {
-            container.innerHTML = '<p style="color: var(--text-light); text-align: center;">No active pickups</p>';
+            container.innerHTML = `
+                <div style="text-align: center; padding: 3rem 1rem; color: var(--text-light);">
+                    <i class="fas fa-truck-loading" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.2;"></i>
+                    <p style="font-size: 0.9rem; opacity: 0.6;">No active pickups at the moment</p>
+                </div>
+            `;
             return;
         }
 
-        container.innerHTML = `
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                        <th>Picked Up</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${pickups.map(p => `
-                        <tr>
-                            <td>#${p.id}</td>
-                            <td>${p.latitude.toFixed(4)}, ${p.longitude.toFixed(4)}</td>
-                            <td><span class="status-badge status-${p.status.toLowerCase()}">${p.status}</span></td>
-                            <td>${new Date(p.reportedAt).toLocaleDateString()}</td>
-                            <td>
-                                <button class="status-action" onclick="showReportDetailsById(${p.id})">
-                                    ${p.status === 'PICKING' ? '✅ Complete' : 'View'}
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
+        container.innerHTML = pickups.map(p => {
+            const isUrgent = p.description && p.description.toLowerCase().includes('urgent');
+            const dist = (Math.random() * 3).toFixed(1); // Placeholder for distance
+
+            return `
+                <div class="report-card">
+                    <div class="tag ${isUrgent ? 'urgent' : 'new'}">${isUrgent ? 'URGENT' : 'ACTIVE'}</div>
+                    <div class="distance-tag">${dist} km away</div>
+                    
+                    <h3 style="margin: 0.5rem 0 0.25rem;">${p.description || 'Waste Report'}</h3>
+                    <div style="font-size: 0.75rem; color: var(--text-light); margin-bottom: 1rem;">
+                        <i class="fas fa-map-marker-alt"></i> ${p.latitude.toFixed(4)}, ${p.longitude.toFixed(4)}
+                    </div>
+
+                    <div class="card-main">
+                        <img src="${p.imageUrl || 'https://via.placeholder.com/150?text=Waste+Image'}" class="card-img-placeholder" alt="Waste">
+                        <div class="card-vol-estimate">
+                            <div class="vol">~15kg</div>
+                            <div class="lbl">Est. Volume</div>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="showReportDetailsById(${p.id})">Details</button>
+                        <button class="btn btn-primary btn-sm" onclick="markCollected(${p.id})">Complete</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
 
         // Add markers for pickups
         pickups.forEach(pickup => {
             const marker = L.circleMarker([pickup.latitude, pickup.longitude], {
-                radius: 10,
+                radius: 12,
                 fillColor: '#FF9800',
                 color: '#fff',
-                weight: 2,
+                weight: 3,
                 opacity: 1,
-                fillOpacity: 0.8
+                fillOpacity: 1
             }).addTo(map);
 
             marker.on('click', () => showReportDetails(pickup));

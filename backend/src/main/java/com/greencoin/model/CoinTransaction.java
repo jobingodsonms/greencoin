@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+// Green Coin Transaction Model
 public class CoinTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

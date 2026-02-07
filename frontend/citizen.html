@@ -7,135 +7,193 @@
     <title>Citizen Dashboard - Green Coin</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <!-- Navigation Bar -->
-        <nav class="navbar">
-            <div class="navbar-brand logo-container">
+    <div class="dashboard-overhaul">
+        <!-- New Premium Navbar -->
+        <nav class="navbar-overhaul">
+            <div class="nav-brand-group">
                 <img src="assets/logo.svg" class="logo-img" alt="Green Coin Logo">
-                Green Coin
+                <h2>Green Coin</h2>
+                <div class="status-chip">
+                    <div class="status-dot"></div>
+                    CITIZEN
+                </div>
             </div>
-            <div class="navbar-user">
-                <div class="coin-badge" id="coinBalance">0 Coins</div>
-                <span id="userName">User</span>
-                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+
+            <div class="nav-search">
+                <div class="search-wrapper">
+                    <i class="fas fa-search" style="position: absolute; left: 15px; top: 13px; color: #999;"></i>
+                    <input type="text" placeholder="Search rewards, recycling centers, or reports...">
+                </div>
+            </div>
+
+            <div class="nav-right-group">
+                <div class="session-stats">
+                    <div class="label">Coin Balance</div>
+                    <div class="value"><span id="coinBalance">0</span> GC</div>
+                </div>
+                <button class="icon-btn">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="profile-group" style="display: flex; align-items: center; gap: 10px; cursor: pointer;"
+                    onclick="logout()">
+                    <img src="https://ui-avatars.com/api/?name=User&background=456A4B&color=fff" class="profile-avatar"
+                        alt="Profile" id="navAvatar">
+                    <i class="fas fa-sign-out-alt" style="color: var(--text-light);"></i>
+                </div>
             </div>
         </nav>
 
-        <!-- Dashboard Content -->
-        <div class="dashboard-content">
-            <div class="dashboard-grid">
-                <!-- Sidebar: Submit Report Form -->
-                <div class="card">
-                    <h2 class="card-title">📸 Report Waste</h2>
-                    <form id="reportForm">
-                        <div class="form-group">
-                            <label for="wasteImage">Photo</label>
-                            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                                <input type="file" id="wasteImage" accept="image/*" capture="environment"
-                                    style="display: none;">
-                                <button type="button" class="btn btn-secondary" style="flex: 1;"
-                                    onclick="document.getElementById('wasteImage').click()">📁 Choose File</button>
-                                <button type="button" class="btn btn-secondary" style="flex: 1;"
-                                    onclick="openCamera()">📸 Take Photo</button>
+        <!-- Main Layout Split -->
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar" style="width: 420px;">
+                <header class="sidebar-header">
+                    <h3><i class="fas fa-camera" style="margin-right: 8px; color: var(--primary-color);"></i> Report
+                        Waste</h3>
+                </header>
+
+                <div class="sidebar-scroll-area">
+                    <!-- Report Form -->
+                    <div class="report-card" style="padding: 1.5rem;">
+                        <form id="reportForm">
+                            <div class="form-group">
+                                <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-light);">CAPTURE
+                                    EVIDENCE</label>
+                                <div style="display: flex; gap: 10px; margin: 10px 0;">
+                                    <input type="file" id="wasteImage" accept="image/*" capture="environment"
+                                        style="display: none;">
+                                    <button type="button" class="btn btn-secondary btn-sm" style="flex: 1;"
+                                        onclick="document.getElementById('wasteImage').click()">
+                                        <i class="fas fa-image"></i> Gallery
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-sm" style="flex: 1;"
+                                        onclick="openCamera()">
+                                        <i class="fas fa-camera"></i> Camera
+                                    </button>
+                                </div>
+                                <div id="imagePreview" style="display: none; position: relative; margin-top: 10px;">
+                                    <img id="previewImg"
+                                        style="width: 100%; border-radius: 12px; border: 1px solid var(--border-color);" />
+                                    <button type="button" onclick="clearImage()"
+                                        style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer;">&times;</button>
+                                </div>
                             </div>
-                            <div id="imagePreview" style="display: none; position: relative;">
-                                <img id="previewImg"
-                                    style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color);" />
-                                <button type="button" onclick="clearImage()"
-                                    style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer;">×</button>
+
+                            <div class="form-group">
+                                <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-light);">WASTE
+                                    DESCRIPTION</label>
+                                <textarea id="description" rows="3" placeholder="What kind of waste is it?"
+                                    style="margin-top: 5px; border-radius: 12px;"></textarea>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea id="description" rows="4"
-                                placeholder="Describe the waste type and location details..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Location</label>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <input type="text" id="locationDisplay" readonly placeholder="Getting location..."
-                                    style="flex: 1;">
-                                <button type="button" class="btn btn-secondary" onclick="refreshLocation()">📍</button>
+                            <div class="form-group">
+                                <label
+                                    style="font-size: 0.8rem; font-weight: 700; color: var(--text-light);">LOCATION</label>
+                                <div style="display: flex; gap: 8px; align-items: center; margin-top: 5px;">
+                                    <input type="text" id="locationDisplay" readonly placeholder="Detecting location..."
+                                        style="flex: 1; border-radius: 12px;">
+                                    <button type="button" class="btn btn-secondary" onclick="refreshLocation()"
+                                        style="padding: 10px; border-radius: 12px;">📍</button>
+                                </div>
+                                <input type="hidden" id="latitude">
+                                <input type="hidden" id="longitude">
                             </div>
-                            <input type="hidden" id="latitude">
-                            <input type="hidden" id="longitude">
+
+                            <button type="submit" class="btn btn-primary"
+                                style="width: 100%; border-radius: 12px; padding: 14px;">
+                                <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Submit Report
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div style="margin-top: 2rem;">
+                        <h4
+                            style="margin-bottom: 1rem; color: var(--text-dark); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                            Recent Activity</h4>
+                        <div id="transactionList">
+                            <p style="text-align: center; color: var(--text-light); padding: 1rem; opacity: 0.5;">No
+                                recent rewards</p>
                         </div>
-
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Report</button>
-                    </form>
-
-                    <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
-
-                    <!-- Transaction History -->
-                    <h3 class="card-title">💰 Recent Transactions</h3>
-                    <div id="transactionList">
-                        <p style="color: var(--text-light); text-align: center;">Loading...</p>
                     </div>
                 </div>
 
-                <!-- Main Content: Map with Reports -->
-                <div>
-                    <div class="card">
-                        <h2 class="card-title">🗺️ My Reports</h2>
-                        <div class="map-container">
-                            <div id="map"></div>
-                            <div class="map-legend">
-                                <div class="legend-item">
-                                    <div class="legend-icon" style="background: #2196F3;"></div>
-                                    <span>Open</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-icon" style="background: #FF9800;"></div>
-                                    <span>Picking</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-icon" style="background: #4CAF50;"></div>
-                                    <span>Collected</span>
-                                </div>
-                            </div>
-                        </div>
+                <footer class="sidebar-footer">
+                    <div class="quota-header">
+                        <span>Environmental Impact</span>
+                        <span>Level 2</span>
                     </div>
+                    <div class="quota-bar-bg">
+                        <div class="quota-bar-fill" style="width: 45%; background: var(--secondary-color);"></div>
+                    </div>
+                </footer>
+            </aside>
 
-                    <!-- Reports Table -->
-                    <div class="card" style="margin-top: 1.5rem;">
-                        <h3 class="card-title">📋 Report History</h3>
-                        <div id="reportsTable">
-                            <p style="color: var(--text-light); text-align: center;">Loading reports...</p>
-                        </div>
-                    </div>
+            <!-- Map Wrapper -->
+            <main class="map-wrapper">
+                <div id="map-overhaul"></div>
+
+                <!-- Floating Overlays -->
+                <div class="map-controls-group">
+                    <button class="map-control-btn"><i class="fas fa-plus"></i></button>
+                    <button class="map-control-btn"><i class="fas fa-minus"></i></button>
+                    <button class="map-control-btn" onclick="refreshLocation()"><i class="fas fa-location-arrow"
+                            style="color: var(--primary-color);"></i></button>
                 </div>
-            </div>
+
+                <div class="type-filter-overlay">
+                    <button class="filter-chip active">
+                        <div class="chip-dot" style="background: var(--primary-color);"></div> My Reports
+                    </button>
+                    <button class="filter-chip">
+                        <div class="chip-dot" style="background: #2196F3;"></div> Centers
+                    </button>
+                    <button class="filter-chip">
+                        <div class="chip-dot" style="background: #999;"></div> Nearby
+                    </button>
+                </div>
+            </main>
         </div>
     </div>
 
-    <!-- Camera Modal -->
-    <div id="cameraModal" class="modal"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; align-items: center; justify-content: center;">
-        <div style="position: relative; width: 100%; max-width: 500px; padding: 20px;">
-            <video id="video" width="100%" autoplay playsinline style="border-radius: 12px; background: #000;"></video>
+    <!-- Camera Modal (High Res) -->
+    <div id="cameraModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; flex-direction: column; align-items: center; justify-content: center;">
+        <div
+            style="position: relative; width: 100%; max-width: 600px; height: 100%; display: flex; flex-direction: column;">
+            <video id="video" width="100%" autoplay playsinline style="flex: 1; object-fit: cover;"></video>
             <canvas id="canvas" style="display:none;"></canvas>
-            <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: center;">
-                <button class="btn btn-secondary" onclick="closeCamera()">Cancel</button>
-                <button class="btn btn-primary" onclick="takeSnapshot()">📸 Capture</button>
+
+            <div
+                style="padding: 2rem; display: flex; gap: 2rem; justify-content: center; background: rgba(0,0,0,0.5); position: absolute; bottom: 0; left: 0; right: 0;">
+                <button class="icon-btn"
+                    style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); color: white;"
+                    onclick="closeCamera()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button class="icon-btn"
+                    style="width: 70px; height: 70px; background: white; color: var(--primary-color); font-size: 1.5rem;"
+                    onclick="takeSnapshot()">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <div style="width: 60px;"></div> <!-- Spacer -->
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <!-- Leaflet Map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- SockJS & STOMP for WebSocket -->
+    <!-- SockJS & STOMP -->
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 

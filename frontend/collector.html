@@ -7,57 +7,116 @@
     <title>Collector Dashboard - Green Coin</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <!-- Navigation Bar -->
-        <nav class="navbar">
-            <div class="navbar-brand logo-container">
+    <div class="dashboard-overhaul">
+        <!-- New Premium Navbar -->
+        <nav class="navbar-overhaul">
+            <div class="nav-brand-group">
                 <img src="assets/logo.svg" class="logo-img" alt="Green Coin Logo">
-                Green Coin - Collector
+                <h2>Green Coin Collector</h2>
+                <div class="status-chip">
+                    <div class="status-dot"></div>
+                    CONNECTED
+                </div>
             </div>
-            <div class="navbar-user">
-                <span id="userName">Collector</span>
-                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+
+            <div class="nav-search">
+                <div class="search-wrapper">
+                    <i class="fas fa-search" style="position: absolute; left: 15px; top: 13px; color: #999;"></i>
+                    <input type="text" placeholder="Search coordinates, zone, or report ID...">
+                </div>
+            </div>
+
+            <div class="nav-right-group">
+                <div class="session-stats">
+                    <div class="label">Session Earnings</div>
+                    <div class="value"><span id="sessionCoins">0</span> GC</div>
+                </div>
+                <button class="icon-btn">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="profile-group" style="display: flex; align-items: center; gap: 10px; cursor: pointer;"
+                    onclick="logout()">
+                    <img src="https://ui-avatars.com/api/?name=Collector&background=456A4B&color=fff"
+                        class="profile-avatar" alt="Profile" id="navAvatar">
+                    <i class="fas fa-sign-out-alt" style="color: var(--text-light);"></i>
+                </div>
             </div>
         </nav>
 
-        <!-- Dashboard Content -->
-        <div class="dashboard-content">
-            <div class="dashboard-grid" style="grid-template-columns: 1fr;">
-                <!-- Map with Available Reports -->
-                <div class="card">
-                    <h2 class="card-title">🗺️ Available Pickups</h2>
-                    <div style="margin-bottom: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button class="btn btn-primary" onclick="loadAvailableReports()">🔄 Refresh</button>
-                        <button class="btn btn-secondary" onclick="useMyLocation()">📍 Near Me</button>
+        <!-- Main Layout Split -->
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <header class="sidebar-header">
+                    <h3><i class="fas fa-tasks" style="margin-right: 8px; color: var(--primary-color);"></i> Active
+                        Reports (<span id="activeCount">0</span>)</h3>
+                    <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 700; cursor: pointer;">
+                        SORT: DISTANCE <i class="fas fa-chevron-down"></i>
                     </div>
+                </header>
 
-                    <div class="map-container">
-                        <div id="map"></div>
-                        <div class="map-legend">
-                            <h4 style="margin-bottom: 0.5rem;">Status</h4>
-                            <div class="legend-item">
-                                <div class="legend-icon" style="background: #2196F3;"></div>
-                                <span>Available</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-icon" style="background: #FF9800;"></div>
-                                <span>My Pickups</span>
-                            </div>
-                        </div>
+                <div class="sidebar-scroll-area" id="pickupsList">
+                    <!-- Cards will be injected here by collector.js -->
+                    <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                        <i class="fas fa-truck-loading" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <p>No active pickups</p>
                     </div>
                 </div>
 
-                <!-- My Active Pickups -->
-                <div class="card">
-                    <h3 class="card-title">🚚 My Active Pickups</h3>
-                    <div id="pickupsTable">
-                        <p style="color: var(--text-light); text-align: center;">Loading...</p>
+                <footer class="sidebar-footer">
+                    <div class="quota-header">
+                        <span>Daily Quota Progress</span>
+                        <span>12/15</span>
+                    </div>
+                    <div class="quota-bar-bg">
+                        <div class="quota-bar-fill" style="width: 80%;"></div>
+                    </div>
+                </footer>
+            </aside>
+
+            <!-- Map Wrapper -->
+            <main class="map-wrapper">
+                <div id="map-overhaul"></div>
+
+                <!-- Floating Overlays -->
+                <div class="map-controls-group">
+                    <button class="map-control-btn" onclick="map.zoomIn()"><i class="fas fa-plus"></i></button>
+                    <button class="map-control-btn" onclick="map.zoomOut()"><i class="fas fa-minus"></i></button>
+                    <button class="map-control-btn" onclick="useMyLocation()"><i class="fas fa-location-arrow"
+                            style="color: var(--primary-color);"></i></button>
+                </div>
+
+                <div class="type-filter-overlay">
+                    <button class="filter-chip active">
+                        <div class="chip-dot" style="background: var(--primary-color);"></div> Plastic
+                    </button>
+                    <button class="filter-chip">
+                        <div class="chip-dot" style="background: #2196F3;"></div> Glass
+                    </button>
+                    <button class="filter-chip">
+                        <div class="chip-dot" style="background: #FF9800;"></div> Paper
+                    </button>
+                    <button class="filter-chip">
+                        <div class="chip-dot" style="background: #999;"></div> All Types
+                    </button>
+                </div>
+
+                <!-- Nearby Notification Toast (Hidden by default) -->
+                <div id="nearbyToast" class="toast-nearby" style="display: none;">
+                    <div class="icon-btn" style="background: #f0f7f0; color: var(--primary-color);">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 800; font-size: 0.9rem;">New Report Nearby</div>
+                        <div style="font-size: 0.75rem; color: var(--text-light);">200m away in Sector A-12. Priority:
+                            High</div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 
@@ -65,12 +124,17 @@
     <div id="reportModal"
         style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
         <div
-            style="background: white; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
-            <h3 id="modalTitle"></h3>
+            style="background: white; padding: 2rem; border-radius: 20px; max-width: 500px; width: 90%; box-shadow: var(--shadow-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 id="modalTitle" style="margin: 0;">Report Details</h3>
+                <button onclick="closeModal()"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">&times;</button>
+            </div>
             <div id="modalContent"></div>
-            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                <button id="actionBtn" class="btn btn-primary" style="flex: 1;"></button>
-                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button id="actionBtn" class="btn btn-primary" style="flex: 2; border-radius: 12px;"></button>
+                <button class="btn btn-secondary" onclick="closeModal()"
+                    style="flex: 1; border-radius: 12px;">Back</button>
             </div>
         </div>
     </div>
