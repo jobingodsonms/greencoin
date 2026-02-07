@@ -1,10 +1,12 @@
 package com.greencoin.controller;
 
 import com.greencoin.dto.UserProfileResponse;
+import com.greencoin.dto.ErrorResponse;
 import com.greencoin.model.User;
 import com.greencoin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -45,19 +47,30 @@ public class UserController {
      * @param displayName - Optional display name from Firebase
      */
     @PostMapping("/register")
-    public ResponseEntity<UserProfileResponse> registerUser(
+    public ResponseEntity<?> registerUser(
             Authentication authentication,
             @RequestParam(required = false) String displayName) {
 
-        String firebaseUid = authentication.getName();
+        if (authentication == null) {
+            log.error("Registration failed: Authentication is null. Token verification likely failed.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse("Authentication failed. Please sign in again."));
+        }
 
-        // Extract email from authentication (set by FirebaseTokenFilter)
-        String email = (String) authentication.getCredentials();
+        try {
+            String firebaseUid = authentication.getName();
+            String email = (String) authentication.getCredentials();
 
-        User user = userService.getOrCreateUser(firebaseUid, email, displayName);
-        UserProfileResponse response = mapToProfileResponse(user);
+            log.info("Registering/Syncing user: {} (UID: {})", email, firebaseUid);
+            User user = userService.getOrCreateUser(firebaseUid, email, displayName);
+            UserProfileResponse response = mapToProfileResponse(user);
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error during user registration: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Registration failed: " + e.getMessage()));
+        }
     }
 
     /**

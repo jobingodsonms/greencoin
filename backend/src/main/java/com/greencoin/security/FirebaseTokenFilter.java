@@ -23,22 +23,28 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String idToken = header.substring(7);
+        if (header != null && header.toLowerCase().startsWith("bearer ")) {
+            String idToken = header.substring(7).trim();
             try {
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
                 String uid = decodedToken.getUid();
                 String email = decodedToken.getEmail();
 
+                if (email == null) {
+                    email = (String) decodedToken.getClaims().get("email");
+                }
+
+                log.info("Authenticated Firebase user: {}", email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         uid, email, new ArrayList<>());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.debug("Found Firebase token for user: {}", email);
             } catch (Exception e) {
-                log.error("Error verifying Firebase token: {}", e.getMessage());
+                log.error("Firebase token verification failed: {}", e.getMessage());
                 SecurityContextHolder.clearContext();
             }
+        } else if (header != null) {
+            log.warn("Invalid Authorization header format. Expected 'Bearer <token>'");
         }
 
         filterChain.doFilter(request, response);
