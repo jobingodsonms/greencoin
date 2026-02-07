@@ -136,93 +136,78 @@ function closeCamera() {
 
 function takeSnapshot() {
     const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const context = canvas.getContext('2d');
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    canvas.toBlob((blob) => {
-        capturedBlob = blob;
-        const url = URL.createObjectURL(blob);
-        document.getElementById('previewImg').src = url;
-        document.getElementById('imagePreview').style.display = 'block';
-        closeCamera();
-    }, 'image/jpeg', 0.8);
-}
-
-function clearImage() {
-    capturedBlob = null;
-    document.getElementById('wasteImage').value = '';
-    document.getElementById('previewImg').src = '';
-    document.getElementById('imagePreview').style.display = 'none';
-}
-
-// Submit waste report
-document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const description = document.getElementById('description').value;
-    const latitude = document.getElementById('latitude').value;
-    const longitude = document.getElementById('longitude').value;
-
-    if (!latitude || !longitude) {
-        alert('Please enable location to submit report');
-        return;
-    }
-
-    if (!capturedBlob) {
-        alert('Please select or take an image');
-        return;
-    }
-
-    // Show loading state
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
-
-    console.log('Submission started. Data:', { description, latitude, longitude });
-    console.log('Image to upload:', capturedBlob);
-
-    try {
-        // Upload image to Firebase Storage
-        console.log('Step 1: Uploading image to Firebase...');
-        const imageUrl = await uploadImage(capturedBlob);
-        console.log('Step 1 Complete: Image URL:', imageUrl);
-
-        // Submit report to backend
-        console.log('Step 2: Submitting report to backend API...');
-        const report = await api.createReport({
-            latitude: parseFloat(latitude),
-            longitude: parseFloat(longitude),
-            imageUrl: imageUrl,
-            description: description
+    const canv/**
+ * Convert File/Blob to Base64
+ */
+    async function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
         });
-        console.log('Step 2 Complete: Report created:', report);
-
-        alert('✅ Report submitted successfully! You will earn 50 coins when collected.');
-
-        // Reset form
-        document.getElementById('reportForm').reset();
-        clearImage();
-
-        // Reload reports
-        await loadMyReports();
-
-    } catch (error) {
-        console.error('Submit error:', error);
-        alert('Failed to submit report: ' + error.message);
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
     }
-});
 
-// Upload image to Firebase Storage
-async function uploadImage(file) {
-    const storage = firebase.storage();
+    // Set up form submission
+    document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const description = document.getElementById('description').value;
+        const latitude = document.getElementById('latitude').value;
+        const longitude = document.getElementById('longitude').value;
+
+        if (!capturedBlob) {
+            alert('Please capture or select a photo first');
+            return;
+        }
+
+        if (!latitude || !longitude) {
+            alert('Please enable location to submit report');
+            return;
+        }
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            console.log('Step 1: Converting image to Base64...');
+            const base64Image = await fileToBase64(capturedBlob);
+            console.log('Step 1 Complete: Base64 string created (length: ' + base64Image.length + ')');
+
+            console.log('Step 2: Submitting report to backend API...');
+            const report = await api.createReport({
+                latitude: parseFloat(latitude),
+                longitude: parseFloat(longitude),
+                imageUrl: base64Image, // Sending Base64 string directly
+                description: description
+            });
+            console.log('Step 2 Complete: Report created:', report);
+
+            // Success!
+            alert('✅ Report submitted successfully! You will earn 50 coins when collected.');
+
+            // Reset form
+            document.getElementById('reportForm').reset();
+            capturedBlob = null;
+            document.getElementById('imagePreview').style.display = 'none';
+
+            // Refresh UI
+            loadTransactions();
+            loadCoinBalance();
+            loadMyReports();
+
+        } catch (error) {
+            console.error('Submit error:', error);
+            alert('Failed to submit report: ' + error.message);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        }
+    });
+
     const storageRef = storage.ref();
     const timestamp = Date.now();
 

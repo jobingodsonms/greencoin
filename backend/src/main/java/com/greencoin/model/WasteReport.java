@@ -25,7 +25,7 @@ public class WasteReport {
     @Column(nullable = false)
     private java.math.BigDecimal longitude;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String imageUrl;
 
     @Column(columnDefinition = "TEXT")
