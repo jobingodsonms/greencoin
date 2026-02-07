@@ -183,17 +183,24 @@ document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
 
+    console.log('Submission started. Data:', { description, latitude, longitude });
+    console.log('Image to upload:', capturedBlob);
+
     try {
         // Upload image to Firebase Storage
+        console.log('Step 1: Uploading image to Firebase...');
         const imageUrl = await uploadImage(capturedBlob);
+        console.log('Step 1 Complete: Image URL:', imageUrl);
 
         // Submit report to backend
+        console.log('Step 2: Submitting report to backend API...');
         const report = await api.createReport({
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
             imageUrl: imageUrl,
             description: description
         });
+        console.log('Step 2 Complete: Report created:', report);
 
         alert('✅ Report submitted successfully! You will earn 50 coins when collected.');
 
@@ -215,18 +222,25 @@ document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
 
 // Upload image to Firebase Storage
 async function uploadImage(file) {
-    // For simplicity, we'll use a placeholder URL
-    // In production, upload to Firebase Storage
-
     const storage = firebase.storage();
     const storageRef = storage.ref();
     const timestamp = Date.now();
-    const imageRef = storageRef.child(`waste-reports/${timestamp}_${file.name}`);
 
-    await imageRef.put(file);
-    const downloadURL = await imageRef.getDownloadURL();
+    // Fix: Blobs from camera don't have .name property
+    const name = file.name || `capture_${timestamp}.jpg`;
+    const imageRef = storageRef.child(`waste-reports/${timestamp}_${name}`);
 
-    return downloadURL;
+    console.log(`Starting upload to path: waste-reports/${timestamp}_${name}`);
+
+    try {
+        const uploadTask = await imageRef.put(file);
+        console.log('Upload successful:', uploadTask);
+        const downloadURL = await imageRef.getDownloadURL();
+        return downloadURL;
+    } catch (error) {
+        console.error('Firebase Storage Error:', error);
+        throw new Error('Storage Upload Failed: ' + error.message);
+    }
 }
 
 // Load coin balance
