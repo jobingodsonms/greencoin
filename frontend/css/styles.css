@@ -1263,3 +1263,81 @@ textarea:focus {
     box-shadow: var(--shadow-lg);
     z-index: 2000;
 }
+
+/* ================================
+   Mobile Responsiveness for Dashboard
+================================ */
+@media (max-width: 900px) {
+    .main-layout {
+        flex-direction: column-reverse;
+        /* Map on top, sidebar below */
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 50vh;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .map-wrapper {
+        height: 50vh;
+        flex: none;
+    }
+
+    .navbar-overhaul {
+        padding: 0.5rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .nav-brand-group {
+        min-width: auto;
+    }
+
+    .nav-brand-group h2 {
+        font-size: 1rem;
+    }
+
+    .nav-search {
+        order: 3;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .nav-right-group {
+        min-width: auto;
+        gap: 0.5rem;
+        flex: 1;
+        justify-content: flex-end;
+    }
+
+    .session-stats {
+        display: none;
+        /* Hide stats on mobile to save space */
+    }
+
+    .status-chip {
+        font-size: 0.65rem;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        height: 60vh;
+    }
+
+    .map-wrapper {
+        height: 40vh;
+    }
+
+    .card-main {
+        flex-direction: column;
+    }
+
+    .card-img-placeholder {
+        width: 100%;
+        height: 150px;
+    }
+}
