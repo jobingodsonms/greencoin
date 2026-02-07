@@ -13,18 +13,18 @@
 }
 
 :root {
-    --primary-color: #4CAF50;
-    --primary-dark: #388E3C;
+    --primary-color: #456A4B;
+    --primary-dark: #2D4531;
     --secondary-color: #2196F3;
     --danger-color: #F44336;
     --warning-color: #FF9800;
-    --text-dark: #212121;
-    --text-light: #757575;
-    --bg-light: #F5F5F5;
+    --text-dark: #2D4531;
+    --text-light: #5A8561;
+    --bg-light: #FFFBE7;
     --bg-white: #FFFFFF;
-    --border-color: #E0E0E0;
-    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --border-color: #E8DCC4;
+    --shadow: 0 4px 12px rgba(69, 106, 75, 0.1);
+    --shadow-lg: 0 8px 24px rgba(69, 106, 75, 0.15);
 }
 
 .logo-container {
@@ -504,7 +504,7 @@ footer {
 
 /* Landing Page Enhancements */
 .landing-container {
-    background-color: #fcfdfc;
+    background-color: var(--bg-light);
 }
 
 .hero-section {
@@ -512,7 +512,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f0f7f0 0%, #ffffff 100%);
+    background: linear-gradient(135deg, #f7f9f2 0%, var(--bg-light) 100%);
     text-align: center;
     padding: 4rem 1rem;
 }
@@ -605,7 +605,7 @@ footer {
 }
 
 .role-card.citizen .role-header {
-    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    background: linear-gradient(135deg, #456A4B, #2D4531);
 }
 
 .role-card.collector .role-header {
@@ -647,7 +647,7 @@ footer {
 }
 
 .impact-item {
-    background: #f8faf8;
+    background: #FFFCF0;
     padding: 2rem;
     border-radius: 16px;
     border-left: 4px solid var(--primary-color);
@@ -687,7 +687,7 @@ footer {
 
 .use-case-card {
     padding: 2rem;
-    background: white;
+    background: var(--bg-white);
     border-radius: 16px;
     box-shadow: var(--shadow);
 }
