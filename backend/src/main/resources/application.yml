@@ -3,9 +3,8 @@ spring:
     name: greencoin-backend
   
   datasource:
+    url: jdbc:${DATABASE_URL:postgresql://localhost:5432/greencoin}
     driver-class-name: org.postgresql.Driver
-    # The URL, username, and password are handled by DatabaseConfig.java
-    # to support Railway's DATABASE_URL format.
 
   jpa:
     hibernate:
