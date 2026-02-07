@@ -6,6 +6,8 @@ let map;
 let currentLocation = null;
 let markers = [];
 let userProfile = null;
+let capturedBlob = null;
+let stream = null;
 
 // Initialize dashboard
 async function init() {
@@ -97,6 +99,7 @@ function refreshLocation() {
 function handleImagePreview(e) {
     const file = e.target.files[0];
     if (file) {
+        capturedBlob = file;
         const reader = new FileReader();
         reader.onload = (event) => {
             document.getElementById('previewImg').src = event.target.result;
@@ -106,11 +109,60 @@ function handleImagePreview(e) {
     }
 }
 
+// Camera Logic
+async function openCamera() {
+    const modal = document.getElementById('cameraModal');
+    const video = document.getElementById('video');
+
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' },
+            audio: false
+        });
+        video.srcObject = stream;
+        modal.style.display = 'flex';
+    } catch (err) {
+        console.error("Camera access denied:", err);
+        alert("Could not access camera. Please check permissions.");
+    }
+}
+
+function closeCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+    document.getElementById('cameraModal').style.display = 'none';
+}
+
+function takeSnapshot() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob((blob) => {
+        capturedBlob = blob;
+        const url = URL.createObjectURL(blob);
+        document.getElementById('previewImg').src = url;
+        document.getElementById('imagePreview').style.display = 'block';
+        closeCamera();
+    }, 'image/jpeg', 0.8);
+}
+
+function clearImage() {
+    capturedBlob = null;
+    document.getElementById('wasteImage').value = '';
+    document.getElementById('previewImg').src = '';
+    document.getElementById('imagePreview').style.display = 'none';
+}
+
 // Submit waste report
 document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const imageFile = document.getElementById('wasteImage').files[0];
     const description = document.getElementById('description').value;
     const latitude = document.getElementById('latitude').value;
     const longitude = document.getElementById('longitude').value;
@@ -120,14 +172,20 @@ document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
         return;
     }
 
-    if (!imageFile) {
-        alert('Please select an image');
+    if (!capturedBlob) {
+        alert('Please select or take an image');
         return;
     }
 
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
     try {
         // Upload image to Firebase Storage
-        const imageUrl = await uploadImage(imageFile);
+        const imageUrl = await uploadImage(capturedBlob);
 
         // Submit report to backend
         const report = await api.createReport({
@@ -141,14 +199,17 @@ document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
 
         // Reset form
         document.getElementById('reportForm').reset();
-        document.getElementById('imagePreview').style.display = 'none';
+        clearImage();
 
         // Reload reports
         await loadMyReports();
 
     } catch (error) {
         console.error('Submit error:', error);
-        alert('Failed to submit report. Please try again.');
+        alert('Failed to submit report: ' + error.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
     }
 });
 

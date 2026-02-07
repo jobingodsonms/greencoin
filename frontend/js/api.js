@@ -98,8 +98,13 @@ class APIClient {
         return this.call(`/api/reports/${reportId}`);
     }
 
-    method: 'POST'
-});
+    // Transaction APIs
+    async getTransactions() {
+        return this.call('/api/user/transactions');
+    }
+
+    async getCoinBalance() {
+        return this.call('/api/user/profile');
     }
 }
 
