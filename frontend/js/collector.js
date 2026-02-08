@@ -24,8 +24,6 @@ async function init() {
         return;
     }
 
-    // Update UI
-    document.getElementById('userName').textContent = userProfile.displayName || userProfile.email;
 
     // Initialize map
     initMap();
