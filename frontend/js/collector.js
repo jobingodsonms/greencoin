@@ -224,13 +224,14 @@ async function loadMyPickups() {
                     <div class="tag ${isUrgent ? 'urgent' : 'new'}">${isUrgent ? 'URGENT' : 'ACTIVE'}</div>
                     <div class="distance-tag">${dist} km away</div>
                     
-                    <h3 style="margin: 0.5rem 0 0.25rem;">${p.description || 'Waste Report'}</h3>
-                    <div style="font-size: 0.75rem; color: var(--text-light); margin-bottom: 1rem;">
-                        <i class="fas fa-map-marker-alt"></i> ${p.latitude.toFixed(4)}, ${p.longitude.toFixed(4)}
-                    </div>
+
 
                     <div class="card-main">
                         <img src="${p.imageUrl || 'https://via.placeholder.com/150?text=Waste+Image'}" class="card-img-placeholder" alt="Waste">
+                        <div class="card-vol-estimate">
+                            <div class="vol">~15kg</div>
+                            <div class="lbl">${p.description || 'Waste Report'}</div>
+                        </div>
                     </div>
 
                     <div class="card-actions">
