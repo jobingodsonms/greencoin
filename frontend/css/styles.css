@@ -1278,6 +1278,7 @@ textarea:focus {
         height: 50vh;
         border-right: none;
         border-top: 1px solid var(--border-color);
+        overflow-y: auto;
     }
 
     .map-wrapper {
