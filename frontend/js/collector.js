@@ -231,10 +231,6 @@ async function loadMyPickups() {
 
                     <div class="card-main">
                         <img src="${p.imageUrl || 'https://via.placeholder.com/150?text=Waste+Image'}" class="card-img-placeholder" alt="Waste">
-                        <div class="card-vol-estimate">
-                            <div class="vol">~15kg</div>
-                            <div class="lbl">${p.description || 'Waste Report'}</div>
-                        </div>
                     </div>
 
                     <div class="card-actions">
