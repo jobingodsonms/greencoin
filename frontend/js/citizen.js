@@ -64,7 +64,7 @@ async function init() {
 
 // Initialize Leaflet map
 function initMap() {
-    map = L.map('map').setView([12.9716, 77.5946], 13);
+    map = L.map('map-overhaul').setView([12.9716, 77.5946], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
